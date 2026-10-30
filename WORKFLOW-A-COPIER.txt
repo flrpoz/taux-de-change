@@ -1,0 +1,56 @@
+name: Actualiser les taux et publier
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    # Toutes les six heures (UTC). GitHub peut retarder les déclenchements.
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Publier uniquement la branche par défaut, quel que soit son nom.
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Récupérer les fichiers
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Tester les calculs
+        run: node scripts/test.mjs
+
+      - name: Actualiser les taux disponibles
+        run: node scripts/update-rates.mjs
+
+      - name: Vérifier les fichiers à publier
+        run: node scripts/check-package.mjs
+
+      - name: Configurer GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Téléverser uniquement le contenu de dist
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Publier sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
