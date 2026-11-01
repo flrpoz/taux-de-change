@@ -35,9 +35,11 @@ jobs:
           node-version: '22'
 
       - name: Tester les calculs
-        run: node scripts/test.mjs
+        run: |
+          node scripts/test.mjs
+          node scripts/test-updater.mjs
 
-      - name: Actualiser les taux disponibles
+      - name: 'Actualiser Wise et les références (Visa/Mastercard : manuel ou estimé)'
         run: node scripts/update-rates.mjs
 
       - name: Vérifier les fichiers à publier

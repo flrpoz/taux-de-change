@@ -1,3 +1,5 @@
+> **Version fiabilité des taux** : commencer par MISE-A-JOUR.md. Recherche et formules : FIABILITE-DES-TAUX.md.
+
 > Pour installer ce paquet sur GitHub et votre iPhone, commencez par **INSTALLATION.md**. Le workflow utilise la branche par défaut du dépôt.
 
 # Carte Claire
@@ -8,7 +10,7 @@ Application statique gratuite, sans dépendances, pour iPhone, iPad et ordinateu
 
 Entrer le montant local, choisir la devise, puis Comparer. La catégorie par défaut est Autres achats; changer la catégorie pour adapter les récompenses. Les réglages comprennent les frais FX, valeurs des points en cents CAD, multiplicateurs, rendement annuel de 8 %, délai de 21 jours, cumul mensuel BNC et exemption simulée.
 
-Les résultats incomplets ne sont pas classés. Wise utilise les frais de 0,75 % demandés par l’utilisateur, enregistrables et modifiables : hypothèse explicitement indiquée, sans prétendre être un devis officiel. Un devis en CAD saisi pour un achat précis remplace cette hypothèse. Une saisie de taux doit être exprimée en CAD pour 1 unité de devise locale, sans frais, avec sa date/heure. Le taux peut être manuel même si les autres cartes utilisent une référence estimée.
+Les résultats incomplets ne sont pas classés. Wise utilise les frais de 0,75 % demandés par l’utilisateur, enregistrables et modifiables : hypothèse explicitement indiquée, sans prétendre être un devis officiel. Un devis en CAD saisi pour un achat précis remplace cette hypothèse. Une saisie de taux doit être exprimée en CAD pour 1 unité de devise locale, avec sa date à la source et, facultativement, son heure. Visa/Mastercard : choisir sans frais ou frais inclus; en mode inclus, préciser le pourcentage déjà compris. Le taux peut être manuel même si les autres cartes utilisent une référence estimée.
 
 ## Faisabilité vérifiée le 30 octobre 2026
 
@@ -40,7 +42,7 @@ Délai = total facturé × ((1 + rendement annuel)^(jours/365) − 1). Coût net
 
 ## Tests et développement
 
-Node 22+ : `node scripts/test.mjs` puis `node scripts/update-rates.mjs`.
+Node 22+ : `node scripts/test.mjs`, `node scripts/test-updater.mjs`, puis `node scripts/update-rates.mjs` et `node scripts/check-package.mjs`.
 Servir dist/ avec un serveur HTTP local; les modules JS ne fonctionnent pas en ouvrant index.html en file://.
 
 Sources :
