@@ -46,7 +46,8 @@ def main():
   with nullcontext(runtime) as p:
    proxy=os.environ.get('HTTPS_PROXY') or os.environ.get('https_proxy')
    opts={'headless':True,'chromium_sandbox':args.chromium_sandbox}
-   if Path('/usr/bin/chromium').exists():opts['executable_path']='/usr/bin/chromium'
+   if os.environ.get('CARTE_CLAIRE_CHROMIUM'):opts['executable_path']=os.environ['CARTE_CLAIRE_CHROMIUM']
+   elif Path('/usr/bin/chromium').exists():opts['executable_path']='/usr/bin/chromium'
    if proxy:opts['proxy']={'server':proxy,'bypass':'127.0.0.1,localhost'}
    log('launch_fresh_browser')
    browser=p.chromium.launch(**opts)

@@ -67,7 +67,8 @@ try:
             print('TEST LOCAL collecteur',provider,currency,'OK',flush=True)
     with sync_playwright() as p:
         opts={'headless':True,'chromium_sandbox':True}
-        if Path('/usr/bin/chromium').exists():opts['executable_path']='/usr/bin/chromium'
+        if os.environ.get('CARTE_CLAIRE_CHROMIUM'):opts['executable_path']=os.environ['CARTE_CLAIRE_CHROMIUM']
+        elif Path('/usr/bin/chromium').exists():opts['executable_path']='/usr/bin/chromium'
         b=p.chromium.launch(**opts)
         context=b.new_context(viewport={'width':1280,'height':1000},service_workers='block')
         external=[]

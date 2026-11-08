@@ -55,7 +55,7 @@ Les tests synthétiques ne sont pas des collectes officielles : leurs résultats
 
 ### GitHub Actions
 
-**Test distant non exécuté à la rédaction : l'accès GitHub de l'environnement reste invalide.** Les tests locaux ne sont pas présentés comme des tests sur les runners GitHub.
+Le compte GitHub est maintenant connecté et la branche de livraison est publiée dans la [PR en brouillon n° 1](https://github.com/flrpoz/taux-de-change/pull/1). Le premier test distant a confirmé les tests Node mais a échoué avant navigation : AppArmor Ubuntu bloquait le sandbox du Chromium système. Le workflow sélectionne désormais le navigateur fourni par Playwright et charge un profil AppArmor limité à son chemin exact pour autoriser les user namespaces. Le sandbox Chromium reste activé, sans désactivation globale de cette protection Ubuntu. La réussite de la relance doit être constatée dans Actions avant validation finale. Les collectes financières réelles sur GitHub ne sont pas déduites des tests locaux : la validation CI utilise des formulaires synthétiques, sans requête fournisseur.
 
 `ci.yml`, nommé **Valider Carte Claire sans publication**, démarre au push de la branche de livraison. Il installe Chromium, teste les formulaires locaux et l'application, et conserve les preuves. Il ne publie rien, ne collecte aucun fournisseur non autorisé et n'utilise pas OpenAI. L'accès réel des calculateurs depuis GitHub reste à tester lorsqu'il sera autorisé ; IP, région et versions peuvent changer leur comportement.
 
