@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 3,
+  "networkPolicy": {
+    "mastercard": {
+      "status": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA.",
+      "termsUrl": "https://www.mastercard.com/ca/en/terms-of-use.html"
+    },
+    "visa": {
+      "status": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet.",
+      "termsUrl": "https://www.visa.ca/en_CA/legal.html"
+    },
+    "wise": {
+      "status": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise.",
+      "termsUrl": "https://wise.com/ca/legal/terms-of-use"
+    }
+  },
+  "checkedAt": "2026-11-08T22:03:36.214Z",
+  "currencies": {
+    "EUR": {
+      "reference": {
+        "rate": 1.5705,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=EUR&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 1.55979,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=EUR&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "USD": {
+      "reference": {
+        "rate": 1.4066,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=USD&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 1.3976,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=USD&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "AUD": {
+      "reference": {
+        "rate": 0.96646,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=AUD&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 0.982792,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=AUD&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "IDR": {
+      "reference": {
+        "rate": 0.000077713,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=IDR&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 0.0000770771,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=IDR&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "JPY": {
+      "reference": {
+        "rate": 0.0088844,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=JPY&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 0.00886886,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=JPY&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "GBP": {
+      "reference": {
+        "rate": 1.8828,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=GBP&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 1.87174,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=GBP&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "CHF": {
+      "reference": {
+        "rate": 1.7177,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=CHF&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 1.69396,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=CHF&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "NZD": {
+      "reference": {
+        "rate": 0.77975,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=NZD&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 0.786919,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=NZD&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "THB": {
+      "reference": {
+        "rate": 0.041926,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=THB&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 0.041376,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=THB&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "MXN": {
+      "reference": {
+        "rate": 0.075205,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=MXN&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 0.0743879,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=MXN&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "SGD": {
+      "reference": {
+        "rate": 1.0976,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=SGD&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 1.0935,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=SGD&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    },
+    "HKD": {
+      "reference": {
+        "rate": 0.17948,
+        "stamp": "2026-11-06 · heure de fixation non fournie",
+        "rateDate": "2026-11-06",
+        "source": "https://api.frankfurter.dev/v1/latest?base=HKD&symbols=CAD",
+        "status": "estimated",
+        "feeMode": "exclusive"
+      },
+      "wise": {
+        "rate": 0.178159,
+        "stamp": "2026-11-01T12:22:01.023Z",
+        "source": "https://wise.com/rates/live?source=HKD&target=CAD",
+        "status": "official",
+        "feeMode": "exclusive"
+      }
+    }
+  },
+  "errors": [],
+  "maxAgeHours": 72,
+  "collection": {
+    "mastercard:EUR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "mastercard:USD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "mastercard:IDR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "mastercard:AUD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "visa:EUR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "visa:USD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "visa:IDR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "visa:AUD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "wise:EUR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    },
+    "wise:USD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    },
+    "wise:IDR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    },
+    "wise:AUD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    }
+  }
+}
