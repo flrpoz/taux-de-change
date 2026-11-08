@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "currencies": ["EUR", "USD", "IDR", "AUD"],
+  "referenceEnabled": true,
+  "maxAgeHours": 72,
+  "maxDailyChangePercent": 10,
+  "providers": {
+    "mastercard": {
+      "enabled": false,
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA.",
+      "termsUrl": "https://www.mastercard.com/ca/en/terms-of-use.html",
+      "accessUrl": "https://developer.mastercard.com/currency-conversion-calculator/documentation/",
+      "permission": null
+    },
+    "visa": {
+      "enabled": false,
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet.",
+      "termsUrl": "https://www.visa.ca/en_CA/legal.html",
+      "accessUrl": "https://developer.visa.com/docs/foreign_exchange",
+      "permission": null
+    },
+    "wise": {
+      "enabled": false,
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise.",
+      "termsUrl": "https://wise.com/ca/legal/terms-of-use",
+      "accessUrl": "https://wise.com/partner/guidelines",
+      "permission": null
+    }
+  }
+}

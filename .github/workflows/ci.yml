@@ -1,0 +1,42 @@
+name: Valider Carte Claire sans publication
+on:
+  push:
+    branches: [main, livraison-2026-11-10]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Régressions, sources et conservation après panne
+        run: |
+          node scripts/test.mjs
+          node scripts/test-integration.mjs
+          node scripts/test-persistence.cjs
+          node scripts/test-updater.mjs
+          node scripts/check-package.mjs
+      - name: Installer le navigateur de test
+        run: |
+          python -m pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Tester Chromium et les quatre devises sur des formulaires locaux
+        run: python scripts/test-browser.py
+      - name: Conserver les preuves de test
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-carte-claire-${{ github.run_id }}
+          path: artifacts/
+          retention-days: 14
