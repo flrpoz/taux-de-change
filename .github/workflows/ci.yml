@@ -27,11 +27,13 @@ jobs:
           node scripts/test-persistence.cjs
           node scripts/test-updater.mjs
           node scripts/check-package.mjs
+          node scripts/test-personal.mjs
+          python scripts/test-personal-server.py
       - name: Installer le navigateur de test
         run: |
           python -m pip install -r requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Tester Chromium et les quatre devises sur des formulaires locaux
+      - name: Tester Chromium et les cinq devises sur des formulaires locaux
         # Le profil AppArmor est limité au binaire fourni par Playwright.
         # Le sandbox Chromium reste activé.
         # L'étape suivante ne contacte aucun fournisseur financier.

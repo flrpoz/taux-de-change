@@ -2,3 +2,7 @@ artifacts/
 __pycache__/
 *.pyc
 .env
+
+private-data/
+.personal/
+*.private.json

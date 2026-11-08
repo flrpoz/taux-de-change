@@ -1,3 +1,4 @@
+import {personalAllowed} from './personal-policy.mjs';
 import {freshness} from '../dist/snapshot.mjs';
 export const sourceUrls={mastercard:'https://www.mastercard.com/ca/en/personal/get-support/currency-exchange-rate-converter.html',visa:'https://www.visa.ca/en_CA/support/consumer/travel-support/exchange-rate-calculator.html',wise:'https://wise.com/ca/pricing/card-fees'};
 export function isAuthorized(policy,now=Date.now()){
@@ -15,6 +16,7 @@ export function validateObservation(o,provider,currency,previous,config,now=Date
  assert(/^[a-f0-9]{64}$/.test(o.script_sha256||'')&&/^[a-f0-9]{64}$/.test(o.screenshots?.at(-1)?.sha256||''),'Preuve de collecte absente');
  let date=null,rate,quote;
  if(provider==='wise'){
+  if(config.requireWiseCardContext)assert(o.product==='card-purchase'&&o.funding_currency==='CAD'&&o.purchase_currency===currency&&o.region==='CA','Devis Wise hors contexte carte CAD Canada');
   const f=o.fees_cad,total=Number(f?.['Total included fees']),fixed=Number(f?.['Fixed fee']),variable=Number(f?.['Variable fee']);
   assert(f&&[total,fixed,variable].every(n=>Number.isFinite(n)&&n>=0)&&Math.abs(total-fixed-variable)<1e-8&&total<Number(o.amount_cad),'Frais Wise incohérents');
   quote={amount:Number(o.amount),currency,totalCad:Number(o.amount_cad),feeCad:total};
@@ -37,11 +39,11 @@ export function validateObservation(o,provider,currency,previous,config,now=Date
  }
  return {provider,status:'official',validated:true,rate,rateDisplayed:o.rate_cad_per_unit||null,precision:quote?'base reconstituée depuis un devis arrondi':'calculé depuis le montant officiel affiché',feeMode:'exclusive',includedFeePct:0,stamp:date||o.finished_at,rateDate:date,collectedAt:o.finished_at,source:sourceUrls[provider],sourceName:provider,quote:quote||null,proof:{collectorSha256:o.script_sha256||null,screenshotSha256:o.screenshots?.at(-1)?.sha256||null}};
 }
-export function mergeOfficial(snapshot,observations,config,now=Date.now()){
+export function mergeOfficial(snapshot,observations,config,now=Date.now(),{personal=false}={}){
  const out=structuredClone(snapshot);out.schemaVersion=3;out.maxAgeHours=config.maxAgeHours;out.checkedAt=new Date(now).toISOString();out.currencies??={};out.collection??={};out.networkPolicy??={};out.errors=[];
  for(const [provider,policy] of Object.entries(config.providers)){
-  const authorized=isAuthorized(policy,now);
-  out.networkPolicy[provider]={status:authorized?'enabled':'manual',reason:authorized?'Collecte quotidienne autorisée configurée.':policy.reason,termsUrl:policy.termsUrl};
+  const authorized=personal?personalAllowed(config,provider,now):isAuthorized(policy,now);
+  out.networkPolicy[provider]={status:authorized?'enabled':'manual',reason:authorized?(personal?'Lecture personnelle privée; aucune permission de publication.':'Collecte quotidienne autorisée configurée.'):policy.reason,termsUrl:policy.termsUrl};
   for(const currency of config.currencies){
    const key=provider+':'+currency,old=out.collection[key]||{},entry=out.currencies[currency]??={};
    if(!authorized){out.collection[key]={...old,state:'manual',reason:policy.reason};continue;}

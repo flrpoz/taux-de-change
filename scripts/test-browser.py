@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'artifacts/browser-tests';OUT.mkdir(parents=True,exist_ok=True)
 today=datetime.now(timezone.utc)
 day=today.strftime('%Y-%m-%d');mdy=f'{today.month}/{today.day}/{today.year}'
-names={'EUR':'EURO','USD':'UNITED STATES DOLLAR','CAD':'CANADIAN DOLLAR','IDR':'INDONESIAN RUPIAH','AUD':'AUSTRALIAN DOLLAR'}
+names={'EUR':'EURO','USD':'UNITED STATES DOLLAR','CAD':'CANADIAN DOLLAR','IDR':'INDONESIAN RUPIAH','AUD':'AUSTRALIAN DOLLAR','JPY':'JAPANESE YEN'}
 
 def fixture(provider):
     # Valeurs volontairement synthétiques (2 CAD/unité) : jamais des taux officiels.
@@ -37,7 +37,7 @@ document.querySelector('#calculate').onclick=()=>{{let c=document.querySelector(
 <script>document.querySelector('#calculate').onclick=()=>{{let a=Number(document.querySelector('#input_amount_paid').value),c=document.querySelector('#autosuggestinput_from').value;document.querySelector('#result').innerHTML='<p>'+a+' '+c+' = '+(2*a).toFixed(6)+' CAD</p><p>1 '+c+' = 2.000000 CAD</p>'}};</script>'''
     else:
         options=''.join(f'<button role="option" data-code="{c}">{c} {n}</button>' for c,n in names.items() if c!='CAD')
-        html=f'''<p>For residents in Canada — TEST LOCAL</p><input id="SOURCE-input" value="1000"><button id="SOURCE-inputSelectedCurrency">CAD</button>
+        html=f'''<h2>Pricing for the Wise debit card</h2><p>For residents in Canada — TEST LOCAL</p><input id="SOURCE-input" value="1000"><button id="SOURCE-inputSelectedCurrency">CAD</button>
 <input id="TARGET-input" value="500"><button id="TARGET-inputSelectedCurrency">USD</button><input id="TARGET-inputSelectedCurrencySearch">{options}
 <p>Fixed fee</p><p>0 CAD</p><p>Variable fee</p><p>1 CAD</p><p>Total included fees</p><p>1 CAD</p>
 <script>document.querySelectorAll('[role=option]').forEach(b=>b.onclick=()=>document.querySelector('#TARGET-inputSelectedCurrency').textContent=b.dataset.code);document.querySelector('#TARGET-input').oninput=e=>document.querySelector('#SOURCE-input').value=(2*Number(e.target.value)+1).toFixed(2);</script>'''
@@ -57,7 +57,7 @@ origin=f'http://127.0.0.1:{server.server_port}'
 results=[]
 try:
     for provider in ([] if '--app-only' in sys.argv else ['mastercard','visa','wise']):
-        for currency in ['EUR','USD','IDR','AUD']:
+        for currency in ['EUR','USD','IDR','AUD','JPY']:
             cmd=[sys.executable,str(ROOT/'scripts/collectors/collect_ui.py'),provider,'--currency',currency,'--fixture-url',origin+'/fixture/'+provider,'--output-dir',str(OUT/'collectors'),'--chromium-sandbox']
             run=subprocess.run(cmd,cwd=ROOT,stdin=subprocess.DEVNULL,capture_output=True,text=True,timeout=90)
             (OUT/f'{provider}-{currency}.log').write_text(run.stdout+run.stderr)
@@ -82,7 +82,7 @@ try:
         page.locator('#compareForm button').click();expect(page.locator('#summary')).to_contain_text('Comparaison impossible')
         page.screenshot(path=str(OUT/'revision-desktop.png'),full_page=True)
         page.locator('#manual > summary').click()
-        for currency in ['EUR','USD','IDR','AUD']:
+        for currency in ['EUR','USD','IDR','AUD','JPY']:
             page.locator('#currency').select_option(currency)
             for ident,rate in [('rbc','1.5'),('bnc','1.51')]:
                 page.locator('#m-'+ident).fill(rate);page.locator('#d-'+ident).fill(day);page.locator('#mode-'+ident).select_option('exclusive')
@@ -103,6 +103,6 @@ try:
         assert not external,external
         b.close()
     previous=json.loads((OUT/'summary.json').read_text()) if (OUT/'summary.json').exists() else {}
-    (OUT/'summary.json').write_text(json.dumps({'testOnly':True,'financialProviderRequests':0,'collectorCases':results or previous.get('collectorCases',[]),'appCurrencies':['EUR','USD','IDR','AUD'],'pageErrors':errors},indent=2))
-    print(f'Tests Chromium : {len(results)} parcours de collecteur LOCAUX dans cette exécution, 4 devises dans la nouvelle application, vues mobile/desktop, 0 requête fournisseur.',flush=True)
+    (OUT/'summary.json').write_text(json.dumps({'testOnly':True,'financialProviderRequests':0,'collectorCases':results or previous.get('collectorCases',[]),'appCurrencies':['EUR','USD','IDR','AUD','JPY'],'pageErrors':errors},indent=2))
+    print(f'Tests Chromium : {len(results)} parcours de collecteur LOCAUX dans cette exécution, 5 devises dans la nouvelle application, vues mobile/desktop, 0 requête fournisseur.',flush=True)
 finally:server.shutdown()

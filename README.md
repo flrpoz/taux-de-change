@@ -9,3 +9,7 @@ Les sources officielles non autorisées restent manuelles. Les collecteurs Chrom
 L'application est dans `dist/`, sans compilation. Le workflow `ci.yml` teste la version sans publication. Le workflow `pages.yml`, après fusion validée sur `main`, conserve les données sur `carte-claire-data` puis publie Pages. Les paramètres de l'utilisateur restent sur son appareil.
 
 Les tests Node et Chromium, les limites Wise, les permissions, la conservation des taux et les instructions GitHub sont détaillés dans le document de livraison. Les anciens guides INSTALLATION, MISE-A-JOUR et FIABILITE-DES-TAUX décrivent la version antérieure ; pour cette livraison, suivre le nouveau document.
+
+## Usage personnel privé
+
+La proposition distincte est documentée dans [PERSONNEL-PRIVE.md](PERSONNEL-PRIVE.md). Elle garde les observations hors du dépôt public et ne déploie rien automatiquement.

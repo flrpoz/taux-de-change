@@ -1,0 +1,45 @@
+{
+  "scope": "personal-private",
+  "currencies": [
+    "EUR",
+    "USD",
+    "IDR",
+    "AUD",
+    "JPY"
+  ],
+  "maxAgeHours": 72,
+  "maxDailyChangePercent": 10,
+  "referenceEnabled": false,
+  "providers": {
+    "mastercard": {
+      "decision": "blocked",
+      "reviewedAt": "2026-11-08",
+      "reviewBy": "2026-12-08",
+      "reason": "Canadian website terms expressly prohibit automated systems; personal use does not remove this clause.",
+      "termsUrls": [
+        "https://www.mastercard.com/ca/en/terms-of-use.html"
+      ]
+    },
+    "visa": {
+      "decision": "limited-personal-browser",
+      "reviewedAt": "2026-11-08",
+      "reviewBy": "2026-12-08",
+      "reason": "Limited read of public calculator for private personal use; general Visa terms allow personal noncommercial downloads. Canadian legal page renders no substantive rules. No written permission or publication right claimed.",
+      "termsUrls": [
+        "https://www.visa.ca/en_CA/legal.html",
+        "https://www.visa.com/en-us/legal"
+      ]
+    },
+    "wise": {
+      "decision": "limited-personal-browser",
+      "reviewedAt": "2026-11-08",
+      "reviewBy": "2026-12-08",
+      "reason": "Limited read of public Canadian debit card fee calculator for personal purchasing decisions. No blanket automation prohibition found in Canada agreement and worldwide AUP; personal licence scope is uncertain for third-party products. No written permission or publication right claimed.",
+      "termsUrls": [
+        "https://wise.com/ca/legal/terms-of-use",
+        "https://wise.com/gb/legal/acceptable-use-policy",
+        "https://wise.com/help/articles/79CxCv9Qj1r7mDPJuIwUA3/wise-intellectual-property"
+      ]
+    }
+  }
+}

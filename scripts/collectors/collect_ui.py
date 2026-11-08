@@ -18,18 +18,31 @@ def now(): return datetime.now(timezone.utc).isoformat()
 def number(s): return Decimal(s.replace(',','').replace('%','').strip())
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('provider',choices=URLS);ap.add_argument('--currency',default='EUR',choices=['EUR','USD','IDR','AUD']);ap.add_argument('--amount',default='100');ap.add_argument('--inspect-calendar',action='store_true');ap.add_argument('--chromium-sandbox',action='store_true');ap.add_argument('--fixture-url');ap.add_argument('--output-dir',default='artifacts/browser')
+ ap=argparse.ArgumentParser();ap.add_argument('provider',choices=URLS);ap.add_argument('--currency',default='EUR',choices=['EUR','USD','IDR','AUD','JPY']);ap.add_argument('--amount',default='100');ap.add_argument('--inspect-calendar',action='store_true');ap.add_argument('--chromium-sandbox',action='store_true');ap.add_argument('--private-review',action='store_true');ap.add_argument('--fixture-url');ap.add_argument('--output-dir',default='artifacts/browser')
  args=ap.parse_args()
  if args.fixture_url:
   parsed=urlparse(args.fixture_url)
   if parsed.scheme!='http' or parsed.hostname not in ['127.0.0.1','localhost']:raise ValueError('Fixture must be loopback HTTP')
   URLS[args.provider]=args.fixture_url
  else:
-  config=json.loads((Path(__file__).resolve().parents[2]/'config/sources.json').read_text())
-  policy=config['providers'][args.provider];grant=policy.get('permission') or {}
-  today=datetime.now(timezone.utc).date().isoformat()
-  if not(policy.get('enabled') is True and grant.get('collection') is True and grant.get('publication') is True and len(grant.get('evidence','').strip())>10 and re.fullmatch(r'\d{4}-\d{2}-\d{2}',grant.get('reviewedAt','')) and grant['reviewedAt']<=today and (not grant.get('expiresAt') or grant['expiresAt']>today)):
-   print(json.dumps({'status':'policy-blocked','provider':args.provider,'reason':policy['reason']}));return 2
+  if args.private_review:
+   repo_root=Path(__file__).resolve().parents[2]
+   output_root=Path(args.output_dir).resolve()
+   if output_root==repo_root or repo_root in output_root.parents:
+    print(json.dumps({'status':'policy-blocked','reason':'Private evidence must remain outside the repository'}));return 2
+   config=json.loads((repo_root/'config/personal-sources.json').read_text())
+   policy=config['providers'][args.provider]
+   today=datetime.now(timezone.utc).date().isoformat()
+   if not(config.get('scope')=='personal-private' and policy.get('decision')=='limited-personal-browser' and policy.get('reviewedAt','9999')<=today<policy.get('reviewBy','0000')):
+    print(json.dumps({'status':'policy-blocked','provider':args.provider,'reason':policy['reason']}));return 2
+   if os.environ.get('GITHUB_ACTIONS')=='true':
+    print(json.dumps({'status':'policy-blocked','reason':'Personal observations must not run in public GitHub Actions'}));return 2
+  else:
+   config=json.loads((Path(__file__).resolve().parents[2]/'config/sources.json').read_text())
+   policy=config['providers'][args.provider];grant=policy.get('permission') or {}
+   today=datetime.now(timezone.utc).date().isoformat()
+   if not(policy.get('enabled') is True and grant.get('collection') is True and grant.get('publication') is True and len(grant.get('evidence','').strip())>10 and re.fullmatch(r'\d{4}-\d{2}-\d{2}',grant.get('reviewedAt','')) and grant['reviewedAt']<=today and (not grant.get('expiresAt') or grant['expiresAt']>today)):
+    print(json.dumps({'status':'policy-blocked','provider':args.provider,'reason':policy['reason']}));return 2
  out=Path(args.output_dir)/(datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')+'-'+args.provider)
  out.mkdir(parents=True)
  result={'provider':args.provider,'source_url':URLS[args.provider],'currency':args.currency,'amount':args.amount,'started_at':now(),'pid':os.getpid(),'interactive':False,'testOnly':bool(args.fixture_url),'openai_api_calls':0,'browser_sandbox':args.chromium_sandbox,'status':'failed','steps':[],'http_errors':[],'script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
@@ -63,6 +76,7 @@ def main():
    result['navigation_http']=r.status if r else None
    if not r or r.status!=200:raise ValueError('Navigation did not return HTTP 200')
    page.wait_for_timeout(2000)
+   if re.search(r'captcha|verify you are human|access denied|unusual traffic',page.locator('body').inner_text(),re.I):raise ValueError('Access restriction detected; no bypass attempted')
    if args.provider=='mastercard':
     log('reject_optional_cookies')
     page.locator('#onetrust-reject-all-handler').click()
@@ -106,6 +120,8 @@ def main():
     result.update(rate_cad_per_unit=rate[1],amount_cad=amount[2],effective_date_displayed=date[1],bank_fee_percent='0',status='validated')
    elif args.provider=='wise':
     log('select_target_currency')
+    expect(page.get_by_text('Pricing for the Wise debit card',exact=True)).to_be_visible()
+    expect(page.get_by_text(re.compile(r'For residents in'))).to_contain_text('Canada')
     expect(page.locator('#SOURCE-inputSelectedCurrency')).to_have_text('CAD')
     page.locator('#TARGET-inputSelectedCurrency').click()
     page.locator('#TARGET-inputSelectedCurrencySearch').fill(args.currency)
@@ -128,7 +144,7 @@ def main():
     target=number(page.locator('#TARGET-input').input_value())
     if target!=number(args.amount) or debit<=number(fees['Total included fees']):raise ValueError('Invalid Wise amounts')
     result.update(status='validated',amount_cad=str(debit),fees_cad=fees,rate_cad_per_unit=None,
-      effective_rate_derived_cad_per_unit=str(debit/target),effective_date_displayed=None,
+      product='card-purchase',funding_currency='CAD',purchase_currency=args.currency,region='CA',effective_rate_derived_cad_per_unit=str(debit/target),effective_date_displayed=None,
       limitations=['No effective rate timestamp displayed','No precise fee-free rate displayed; do not infer one from rounded amounts'])
    else:
     log('dismiss_optional_cookies')
