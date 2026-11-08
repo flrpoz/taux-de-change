@@ -1,18 +1,23 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "networkPolicy": {
     "mastercard": {
-      "status": "unavailable",
-      "mode": "manual-or-estimated",
-      "reason": "API de production avec accès émetteur approuvé; aucun accès autorisé configuré. Calculateur public non interrogé automatiquement."
+      "status": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA.",
+      "termsUrl": "https://www.mastercard.com/ca/en/terms-of-use.html"
     },
     "visa": {
-      "status": "unavailable",
-      "mode": "manual-or-estimated",
-      "reason": "API de production avec accès approuvé et authentification; aucun accès autorisé configuré."
+      "status": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet.",
+      "termsUrl": "https://www.visa.ca/en_CA/legal.html"
+    },
+    "wise": {
+      "status": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise.",
+      "termsUrl": "https://wise.com/ca/legal/terms-of-use"
     }
   },
-  "checkedAt": "2026-11-01T12:22:10.917Z",
+  "checkedAt": "2026-11-08T13:26:44.678Z",
   "currencies": {
     "EUR": {
       "reference": {
@@ -207,5 +212,56 @@
       }
     }
   },
-  "errors": []
+  "errors": [],
+  "maxAgeHours": 72,
+  "collection": {
+    "mastercard:EUR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "mastercard:USD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "mastercard:IDR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "mastercard:AUD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "visa:EUR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "visa:USD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "visa:IDR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "visa:AUD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "wise:EUR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    },
+    "wise:USD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    },
+    "wise:IDR": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    },
+    "wise:AUD": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    }
+  }
 }

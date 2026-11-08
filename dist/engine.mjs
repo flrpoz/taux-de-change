@@ -1,5 +1,5 @@
 import {manualRate} from './provenance.mjs';
-export const defaults={wiseFX:0.75,annual:8,days:21,rbcFX:2.5,bncFX:2.5,rbcValue:1,bncValue:1,rbcOther:1,rbcTravel:1.25,bncOther:1,bncFood:5,bncFoodOver:2,bncGas:2,bncRecurring:2,bncTravel:2,monthly:0,waiver:false,estimates:true};
+export const defaults={wiseFX:0.75,annual:8,days:21,rbcFX:2.5,bncFX:2.5,rbcValue:1,bncValue:1,rbcOther:1,rbcTravel:1.25,bncOther:1,bncFood:5,bncFoodOver:2,bncGas:2,bncRecurring:2,bncTravel:2,monthly:0,waiver:false,estimates:false,allowStale:false};
 export function number(s){if(typeof s==='number')return s;return Number(String(s).trim().replace(/[\s\u00a0\u202f]/g,'').replace(',','.'));}
 export function conversion(amount,rate,feeMode,includedFeePct,appliedFeePct){
  if(!Number.isFinite(rate)||rate<=0||!Number.isFinite(amount)||amount<=0)throw Error('Montant ou taux invalide.');
@@ -16,11 +16,14 @@ export function calculate(amount,currency,category,s,rates,manual={}){
  return ['rbc','bnc','wise'].map(id=>{
   let data;
   try{data=currency==='CAD'?{rate:1,label:'AUCUNE CONVERSION · CAD → CAD',stamp:'Sans objet',status:'identity',feeMode:'exclusive'}:manual[id]?manualRate(id,manual[id]):rates[id];}catch(e){return {id,net:null,reason:e.message};}
+  if(data?.usable===false)return {id,data,net:null,reason:data.reason};
+  if(id==='wise'&&data?.quote&&(data.quote.currency!==currency||Math.abs(data.quote.amount-amount)>1e-9))return {id,data,net:null,reason:`Devis Wise disponible pour ${data.quote.amount} ${data.quote.currency} seulement. Saisissez le taux et les frais de cet achat.`};
   if(!data||((data.estimated||data.status==='estimated')&&id!=='wise'&&!s.estimates)||!Number.isFinite(data.rate)||data.rate<=0)return {id,net:null,reason:'Taux indisponible'};
   let converted;
   const appliedFeePct=currency==='CAD'?0:id==='rbc'?s.rbcFX:id==='bnc'?(s.waiver?0:s.bncFX):s.wiseFX;
   try{converted=conversion(amount,data.rate,data.feeMode||'exclusive',data.includedFeePct,appliedFeePct);}catch(e){return {id,data,net:null,reason:e.message};}
   let {base,fee,gross,baseRate}=converted;
+  if(id==='wise'&&data.quote){gross=data.quote.totalCad;fee=data.quote.feeCad;base=gross-fee;baseRate=base/amount;}
   if(id==='wise'&&currency!=='CAD'&&manual.wiseFee!=null){fee=manual.wiseFee;gross=base+fee;}
   let points=0;
   if(id==='rbc')points=base*(['travel','bnctravel'].includes(category)?s.rbcTravel:s.rbcOther);

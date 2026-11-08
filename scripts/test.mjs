@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
-import {calculate,defaults,number,conversion} from '../dist/engine.mjs';
+import {calculate,defaults as productionDefaults,number,conversion} from '../dist/engine.mjs';
 import {referenceRate,manualRate,wiseRate} from '../dist/provenance.mjs';
+const defaults={...productionDefaults,estimates:true};
 let checks=0;const close=(actual,expected)=>{assert.ok(Math.abs(actual-expected)<1e-9,`${actual} != ${expected}`);checks++;};
 const rates={rbc:referenceRate({rate:1.5,stamp:'2026-10-30'}),bnc:referenceRate({rate:1.51,stamp:'2026-10-30'}),wise:wiseRate({rate:1.49,stamp:'2026-10-30T12:00:00Z'})};
 const pick=(id,settings=defaults,manual={},category='other',currency='EUR')=>calculate(100,currency,category,settings,rates,manual).find(r=>r.id===id);
