@@ -18,7 +18,7 @@ def now(): return datetime.now(timezone.utc).isoformat()
 def number(s): return Decimal(s.replace(',','').replace('%','').strip())
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('provider',choices=URLS);ap.add_argument('--currency',default='EUR',choices=['EUR','USD','IDR','AUD']);ap.add_argument('--amount',default='100');ap.add_argument('--inspect-calendar',action='store_true');ap.add_argument('--chromium-sandbox',action='store_true');ap.add_argument('--fixture-url');ap.add_argument('--output-dir',default='artifacts/browser')
+ ap=argparse.ArgumentParser();ap.add_argument('provider',choices=URLS);ap.add_argument('--currency',default='EUR',choices=['EUR','USD','IDR','AUD','JPY']);ap.add_argument('--amount',default='100');ap.add_argument('--inspect-calendar',action='store_true');ap.add_argument('--chromium-sandbox',action='store_true');ap.add_argument('--fixture-url');ap.add_argument('--output-dir',default='artifacts/browser')
  args=ap.parse_args()
  if args.fixture_url:
   parsed=urlparse(args.fixture_url)

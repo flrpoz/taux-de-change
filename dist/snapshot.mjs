@@ -27,13 +27,13 @@ export function ratesFor(snapshot,currency,{estimates=false,allowStale=false,now
   if(raw?.status==='official'&&raw.validated===true&&raw.provider===provider){
    data={...raw,estimated:false,label:`OFFICIEL · ${provider==='visa'?'Visa':provider==='mastercard'?'Mastercard':'Wise'}${raw.quote?' · devis pour le montant indiqué':''}`};
    if(raw.quote&&!raw.rateDate){data.label+=' · date effective non fournie';data.stamp='Collecté le '+raw.collectedAt;}
-  }else if(id==='wise'&&raw?.status==='official'&&!raw.provider){
+  }else if(id==='wise'&&raw?.status==='official'&&!raw.provider&&!estimates){
    // Ancien instantané, conservé avec son statut indicatif, jamais un devis carte.
    data=wiseRate(raw);
   }
   if(!data&&estimates){data=referenceRate(entry.reference);if(data)data={...data,feeHypothesis:true};}
   if(!data)continue;
-  const age=freshness(data,now,snapshot?.maxAgeHours||72);
+  const age=freshness(data,now,data.estimated?(snapshot?.maxReferenceAgeHours||168):(snapshot?.maxAgeHours||72));
   data={...data,...age};
   if(age.stale){data.label+=' · PÉRIMÉ';data.usable=allowStale;data.reason='Taux périmé : saisissez un taux récent ou autorisez explicitement la simulation avec données anciennes.';}
   out[id]=data;

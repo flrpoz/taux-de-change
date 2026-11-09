@@ -5,6 +5,7 @@ const previous=JSON.parse(await readFile('dist/rates.json','utf8'));
 let observations=[];
 try{observations=JSON.parse(await readFile('artifacts/observations.json','utf8'));}catch{}
 const out=mergeOfficial(previous,observations,config);
+out.maxReferenceAgeHours=config.maxReferenceAgeHours||168;
 if(config.referenceEnabled&&!process.argv.includes('--offline')){
  for(const code of Object.keys(out.currencies)){
   try{

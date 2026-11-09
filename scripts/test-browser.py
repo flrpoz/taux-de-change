@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'artifacts/browser-tests';OUT.mkdir(parents=True,exist_ok=True)
 today=datetime.now(timezone.utc)
 day=today.strftime('%Y-%m-%d');mdy=f'{today.month}/{today.day}/{today.year}'
-names={'EUR':'EURO','USD':'UNITED STATES DOLLAR','CAD':'CANADIAN DOLLAR','IDR':'INDONESIAN RUPIAH','AUD':'AUSTRALIAN DOLLAR'}
+names={'EUR':'EURO','USD':'UNITED STATES DOLLAR','CAD':'CANADIAN DOLLAR','IDR':'INDONESIAN RUPIAH','AUD':'AUSTRALIAN DOLLAR','JPY':'JAPANESE YEN'}
 
 def fixture(provider):
     # Valeurs volontairement synthétiques (2 CAD/unité) : jamais des taux officiels.
@@ -46,6 +46,9 @@ document.querySelector('#calculate').onclick=()=>{{let c=document.querySelector(
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self,*a,**kw):super().__init__(*a,directory=str(ROOT/'dist'),**kw)
     def do_GET(self):
+        if self.path=='/rates.json':
+            snapshot={'schemaVersion':3,'testOnly':True,'checkedAt':today.isoformat(),'currencies':{c:{'reference':{'rate':2,'stamp':day,'status':'estimated','source':'https://api.frankfurter.dev/'},'wise':{'rate':1,'stamp':'2020-01-01','status':'official'}} for c in names if c!='CAD'}}
+            data=json.dumps(snapshot).encode();self.send_response(200);self.send_header('Content-Type','application/json');self.end_headers();self.wfile.write(data);return
         if self.path.startswith('/fixture/'):
             b=fixture(self.path.rsplit('/',1)[-1]);self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.end_headers();self.wfile.write(b)
         else:super().do_GET()
@@ -57,7 +60,7 @@ origin=f'http://127.0.0.1:{server.server_port}'
 results=[]
 try:
     for provider in ([] if '--app-only' in sys.argv else ['mastercard','visa','wise']):
-        for currency in ['EUR','USD','IDR','AUD']:
+        for currency in ['EUR','USD','IDR','AUD','JPY']:
             cmd=[sys.executable,str(ROOT/'scripts/collectors/collect_ui.py'),provider,'--currency',currency,'--fixture-url',origin+'/fixture/'+provider,'--output-dir',str(OUT/'collectors'),'--chromium-sandbox']
             run=subprocess.run(cmd,cwd=ROOT,stdin=subprocess.DEVNULL,capture_output=True,text=True,timeout=90)
             (OUT/f'{provider}-{currency}.log').write_text(run.stdout+run.stderr)
@@ -76,13 +79,19 @@ try:
             if r.request.url.startswith(origin+'/'):r.continue_()
             else:external.append(r.request.url);r.abort()
         context.route('**/*',route)
+        context.add_init_script("if(!localStorage.getItem('carte-claire-v4'))localStorage.setItem('carte-claire-v3',JSON.stringify({estimates:false,rbcFX:3.1}));")
         page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
         page.goto(origin);expect(page.locator('#wiseTotal')).to_have_count(1)
-        page.locator('#settingsButton').click();expect(page.locator('#estimates')).not_to_be_checked();expect(page.locator('#allowStale')).not_to_be_checked();page.locator('#closeSettings').click()
+        page.locator('#settingsButton').click();expect(page.locator('#estimates')).to_be_checked();expect(page.locator('#allowStale')).not_to_be_checked();expect(page.locator('#s-rbcFX')).to_have_value('3.1');page.locator('#closeSettings').click()
+        page.locator('#compareForm button').click();expect(page.locator('#summary')).to_contain_text('minimum estimé')
+        assert all('ESTIMÉ' in tr.inner_text() for tr in page.locator('#rows tr').all())
+        page.locator('#settingsButton').click();page.locator('#estimates').uncheck();page.locator('#settingsForm button[type=submit]').click()
+        page.reload();page.locator('#settingsButton').click();expect(page.locator('#estimates')).not_to_be_checked();page.locator('#closeSettings').click()
         page.locator('#compareForm button').click();expect(page.locator('#summary')).to_contain_text('Comparaison impossible')
+        page.locator('#settingsButton').click();page.locator('#estimates').check();page.locator('#settingsForm button[type=submit]').click()
         page.screenshot(path=str(OUT/'revision-desktop.png'),full_page=True)
         page.locator('#manual > summary').click()
-        for currency in ['EUR','USD','IDR','AUD']:
+        for currency in ['EUR','USD','IDR','AUD','JPY']:
             page.locator('#currency').select_option(currency)
             for ident,rate in [('rbc','1.5'),('bnc','1.51')]:
                 page.locator('#m-'+ident).fill(rate);page.locator('#d-'+ident).fill(day);page.locator('#mode-'+ident).select_option('exclusive')
@@ -103,6 +112,6 @@ try:
         assert not external,external
         b.close()
     previous=json.loads((OUT/'summary.json').read_text()) if (OUT/'summary.json').exists() else {}
-    (OUT/'summary.json').write_text(json.dumps({'testOnly':True,'financialProviderRequests':0,'collectorCases':results or previous.get('collectorCases',[]),'appCurrencies':['EUR','USD','IDR','AUD'],'pageErrors':errors},indent=2))
-    print(f'Tests Chromium : {len(results)} parcours de collecteur LOCAUX dans cette exécution, 4 devises dans la nouvelle application, vues mobile/desktop, 0 requête fournisseur.',flush=True)
+    (OUT/'summary.json').write_text(json.dumps({'testOnly':True,'financialProviderRequests':0,'collectorCases':results or previous.get('collectorCases',[]),'appCurrencies':['EUR','USD','IDR','AUD','JPY'],'pageErrors':errors},indent=2))
+    print(f'Tests Chromium : {len(results)} parcours de collecteur LOCAUX dans cette exécution, 5 devises dans la nouvelle application, vues mobile/desktop, 0 requête fournisseur.',flush=True)
 finally:server.shutdown()

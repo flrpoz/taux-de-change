@@ -1,3 +1,5 @@
+> Comparaison automatique rétablie : références Frankfurter clairement indiquées **ESTIMÉES**, frais Wise hypothétiques modifiables et saisie manuelle conservée. Les collecteurs officiels restent désactivés. Les références sont actualisées chaque jour par le workflow existant ; leur date reste affichée et une référence de plus de 7 jours est exclue par défaut.
+
 # Carte Claire
 
 Comparateur en CAD de Wise Debit, RBC Avion Visa Infinite et BNC World Elite Mastercard. Frais, récompenses et avantage du paiement différé conservés.

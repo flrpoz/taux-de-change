@@ -1,6 +1,12 @@
 {
   "schemaVersion": 1,
-  "currencies": ["EUR", "USD", "IDR", "AUD"],
+  "currencies": [
+    "EUR",
+    "USD",
+    "IDR",
+    "AUD",
+    "JPY"
+  ],
   "referenceEnabled": true,
   "maxAgeHours": 72,
   "maxDailyChangePercent": 10,
@@ -26,5 +32,6 @@
       "accessUrl": "https://wise.com/partner/guidelines",
       "permission": null
     }
-  }
+  },
+  "maxReferenceAgeHours": 168
 }

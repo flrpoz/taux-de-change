@@ -1,7 +1,7 @@
 export const calculators={rbc:'https://www.visa.ca/en_CA/support/consumer/travel-support/exchange-rate-calculator.html',bnc:'https://www.mastercard.com/ca/en/personal/get-support/currency-exchange-rate-converter.html',wise:'https://wise.com/ca/pricing/card-fees'};
 export function referenceRate(record){
  if(!record||!Number.isFinite(record.rate)||record.rate<=0||!record.stamp)return null;
- return {...record,status:'estimated',estimated:true,sourceName:'Frankfurter · référence de banques centrales',label:'ESTIMÉ · référence Frankfurter, pas un taux Visa/Mastercard',source:record.source||'https://frankfurter.dev/',feeMode:'exclusive'};
+ return {...record,status:'estimated',estimated:true,sourceName:'Frankfurter · référence de banques centrales',label:'ESTIMÉ · référence Frankfurter, pas un taux officiel Visa/Mastercard/Wise',source:record.source||'https://frankfurter.dev/',feeMode:'exclusive'};
 }
 export function wiseRate(record){
  if(!record||!Number.isFinite(record.rate)||record.rate<=0||!record.stamp)return null;
