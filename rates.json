@@ -17,7 +17,7 @@
       "termsUrl": "https://wise.com/ca/legal/terms-of-use"
     }
   },
-  "checkedAt": "2026-11-08T22:03:36.214Z",
+  "checkedAt": "2026-11-09T12:09:40.064Z",
   "currencies": {
     "EUR": {
       "reference": {
@@ -274,6 +274,19 @@
     "wise:AUD": {
       "state": "manual",
       "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
+    },
+    "mastercard:JPY": {
+      "state": "manual",
+      "reason": "Saisie manuelle : le site interdit l'accès automatisé. L'API de production exige un accès émetteur et un numéro ICA."
+    },
+    "visa:JPY": {
+      "state": "manual",
+      "reason": "Saisie manuelle : droits de collecte et de republication du calculateur à confirmer. API de production disponible après approbation du projet."
+    },
+    "wise:JPY": {
+      "state": "manual",
+      "reason": "Saisie manuelle : autorisation de collecte et de republication des devis de carte à obtenir auprès de Wise."
     }
-  }
+  },
+  "maxReferenceAgeHours": 168
 }
