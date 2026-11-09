@@ -4,7 +4,7 @@ const required=['index.html','app.js','engine.mjs','provenance.mjs','snapshot.mj
 for(const file of required)assert.ok((await stat('dist/'+file)).size>0,`${file} absent ou vide`);
 const html=await readFile('dist/index.html','utf8');
 assert.match(html,/rel="apple-touch-icon" href="icon-180.png"/);
-assert.match(html,/src="app.js"/);
+assert.match(html,/src="app\.js(?:\?v=[^" ]+)?"/);
 const manifest=JSON.parse(await readFile('dist/manifest.webmanifest','utf8'));
 assert.equal(manifest.start_url,'./');assert.equal(manifest.scope,'./');assert.equal(manifest.display,'standalone');
 for(const icon of manifest.icons)await stat('dist/'+icon.src);
