@@ -90,20 +90,39 @@ try:
         page.locator('#compareForm button').click();expect(page.locator('#summary')).to_contain_text('Comparaison impossible')
         page.locator('#settingsButton').click();page.locator('#estimates').check();page.locator('#settingsForm button[type=submit]').click()
         page.screenshot(path=str(OUT/'revision-desktop.png'),full_page=True)
+        expect(page.locator('thead th').nth(0)).to_have_text('Coût net')
+        expect(page.locator('thead th').nth(1)).to_have_text('Carte')
         page.locator('#manual > summary').click()
+        expect(page.locator('label[for=m-rbc]')).to_contain_text('unités locales pour 1 CAD')
         for currency in ['EUR','USD','IDR','AUD','JPY']:
             page.locator('#currency').select_option(currency)
-            for ident,rate in [('rbc','1.5'),('bnc','1.51')]:
+            for ident,rate in [('rbc',str(1/1.5)),('bnc',str(1/1.51))]:
                 page.locator('#m-'+ident).fill(rate);page.locator('#d-'+ident).fill(day);page.locator('#mode-'+ident).select_option('exclusive')
             page.locator('#d-wise').fill(day);page.locator('#wiseTotal').fill('158.07');page.locator('#wiseFee').fill('0.70')
             page.locator('#applyManual').click()
             expect(page.locator('#status')).to_contain_text('Consultation :')
             wise=page.locator('#rows tr').filter(has_text='Wise Debit')
-            expect(wise.locator('td').nth(3)).to_contain_text('158,07')
-            expect(wise.locator('td').nth(2)).to_contain_text('0,70')
+            expect(wise.locator('td').nth(4)).to_contain_text('158,07')
+            expect(wise.locator('td').nth(3)).to_contain_text('0,70')
             expect(page.locator('#rows tr')).to_have_count(3)
-            assert all('Indisponible' not in tr.locator('td').nth(6).inner_text() for tr in page.locator('#rows tr').all())
+            assert all('Indisponible' not in tr.locator('td').nth(0).inner_text() for tr in page.locator('#rows tr').all())
             print('TEST LOCAL application',currency,'OK',flush=True)
+        # Entrée inverse : 2 unités locales pour 1 CAD => 100 unités coûtent 50 CAD hors frais.
+        page.locator('#m-rbc').fill('2');page.locator('#applyManual').click()
+        rbc=page.locator('#rows tr').filter(has_text='RBC Avion')
+        expect(rbc.locator('td').nth(2)).to_contain_text('50,00')
+        # Taux Mastercard frais inclus : l'inverse doit conserver les frais une seule fois.
+        page.locator('#m-bnc').fill(str(1/1.6052525));page.locator('#mode-bnc').select_option('inclusive');page.locator('#included-bnc').fill('2,5');page.locator('#applyManual').click()
+        bnc=page.locator('#rows tr').filter(has_text='BNC World Elite')
+        expect(bnc.locator('td').nth(4)).to_contain_text('160,53')
+        # Collage d'un taux anglais avec séparateur de milliers, sans arrondi intermédiaire.
+        page.locator('#m-rbc').fill('12,800.25');page.locator('#applyManual').click()
+        expect(page.locator('#rows tr').filter(has_text='RBC Avion')).to_contain_text('0,0000781235')
+        # Wise : même convention inverse avec frais CAD saisis, sans devis total.
+        page.locator('#wiseTotal').fill('');page.locator('#m-wise').fill('2');page.locator('#wiseFee').fill('1');page.locator('#applyManual').click()
+        wise=page.locator('#rows tr').filter(has_text='Wise Debit')
+        expect(wise.locator('td').nth(2)).to_contain_text('50,00');expect(wise.locator('td').nth(4)).to_contain_text('51,00');expect(wise.locator('td').nth(3)).to_contain_text('1,00')
+        page.locator('#m-rbc').fill('0');page.locator('#applyManual').click();expect(page.locator('#status')).to_contain_text('valeur positive')
         page.locator('#amount').fill('101');expect(page.locator('#wiseTotal')).to_have_value('');expect(page.locator('#results')).to_be_hidden()
         context.set_offline(True);page.locator('#compareForm button').click();expect(page.locator('#status')).to_contain_text('Consultation :');context.set_offline(False)
         page.set_viewport_size({'width':390,'height':844});page.goto(origin);expect(page.locator('#settingsButton')).to_be_visible()
