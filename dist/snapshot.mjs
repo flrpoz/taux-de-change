@@ -1,13 +1,13 @@
-import {referenceRate,wiseRate} from './provenance.mjs';
+import {referenceRate,wiseRate} from './provenance.mjs?v=20261109-2';
 const slots={rbc:'visa',bnc:'mastercard',wise:'wise'};
 export function mergeSnapshots(previous,incoming){
- const out=structuredClone(incoming);out.currencies??={};
+ const out=JSON.parse(JSON.stringify(incoming));out.currencies??={};
  for(const [currency,entry] of Object.entries(previous?.currencies||{})){
   for(const provider of Object.values(slots)){
    const old=entry[provider],next=out.currencies[currency]?.[provider];
    if(old?.status!=='official'||!old.validated)continue;
    if(!next||next.status!=='official'||!next.validated||Date.parse(old.collectedAt)>Date.parse(next.collectedAt)){
-    (out.currencies[currency]??={})[provider]=structuredClone(old);
+    (out.currencies[currency]??={})[provider]=JSON.parse(JSON.stringify(old));
    }
   }
  }

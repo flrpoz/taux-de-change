@@ -1,4 +1,4 @@
-import {manualRate} from './provenance.mjs';
+import {manualRate} from './provenance.mjs?v=20261109-2';
 export const defaults={wiseFX:0.75,annual:8,days:21,rbcFX:2.5,bncFX:2.5,rbcValue:1,bncValue:1,rbcOther:1,rbcTravel:1.25,bncOther:1,bncFood:5,bncFoodOver:2,bncGas:2,bncRecurring:2,bncTravel:2,monthly:0,waiver:false,estimates:true,allowStale:false};
 export function number(s){if(typeof s==='number')return s;return Number(String(s).trim().replace(/[\s\u00a0\u202f]/g,'').replace(',','.'));}
 export function conversion(amount,rate,feeMode,includedFeePct,appliedFeePct){
