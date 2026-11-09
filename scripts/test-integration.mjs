@@ -11,7 +11,7 @@ const base={schemaVersion:3,currencies:Object.fromEntries(config.currencies.map(
 function observation(provider,currency='EUR',overrides={}){
  return {provider,currency,amount:100,amount_cad:200,rate_cad_per_unit:'2.000000',bank_fee_percent:'0',source_url:sourceUrls[provider],final_url:sourceUrls[provider],status:'validated',selected_date:'11/08/2026',effective_date_displayed:'November 8th 2026',finished_at:'2026-11-08T12:59:00Z',script_sha256:'a'.repeat(64),screenshots:[{sha256:'b'.repeat(64)}],...overrides};
 }
-assert.equal(defaults.estimates,false);assert.equal(defaults.allowStale,false);
+assert.equal(defaults.estimates,true);assert.equal(defaults.allowStale,false);
 for(const p of Object.values(config.providers))assert.equal(isAuthorized(p,now),false);
 assert.equal(isAuthorized({enabled:true,permission:{collection:true,publication:false,evidence:'not sufficient',reviewedAt:'2026-11-08'}},now),false);
 for(const currency of config.currencies){
@@ -47,3 +47,17 @@ assert.equal(ratesFor(stale,'EUR',{now:now+7*86400000,estimates:true}).rbc.rate,
 assert.equal(ratesFor(base,'EUR',{now}).rbc,undefined);
 assert.equal(freshness({stamp:'inconnue'},now).stale,true);
 console.log('Intégration : 4 devises, devis Wise exact sans double frais, refus des devis de mauvais montant, données de test et dates invalides, conservation après panne, alertes répétées, aucun repli officiel vers estimation.');
+
+// Références synthétiques : aucune collecte fournisseur dans ces assertions.
+for(const currency of ['EUR','USD','IDR','AUD','JPY']){
+ const snap={currencies:{[currency]:{reference:{rate:2,stamp:'2026-11-06',source:'https://api.frankfurter.dev/'},wise:{rate:1,stamp:'2026-10-01',status:'official'}}}};
+ const rates=ratesFor(snap,currency,{...defaults,now:Date.parse('2026-11-09T17:00Z')});
+ const rows=calculate(100,currency,'other',defaults,rates);
+ assert.equal(rows.filter(r=>r.net!=null).length,3,'Les trois cartes sont chiffrées sans saisie');
+ assert(rows.every(r=>r.data.estimated&&r.data.label.includes('ESTIMÉ')));
+ assert.equal(rows.find(r=>r.id==='wise').gross,201.5,'Frais Wise hypothétiques appliqués une seule fois');
+ assert.equal(rates.wise.rate,2,'Ancien taux indicatif Wise écarté en mode estimé');
+ assert.equal(ratesFor(snap,currency,{estimates:false,now}).rbc,undefined);
+ assert.equal(ratesFor(snap,currency,{estimates:true,now:Date.parse('2026-11-14T17:00Z')}).rbc.usable,false);
+}
+console.log('Comparaison automatique estimée : cinq devises, trois cartes, fin de semaine, ancien Wise écarté, dates et libellés conservés, exclusion des références trop anciennes.');
