@@ -141,12 +141,12 @@ try:
         expect(bnc.locator('td').nth(4)).to_contain_text('160,53')
         # Collage d'un taux anglais avec séparateur de milliers, sans arrondi intermédiaire.
         page.locator('#m-rbc').fill('12,800.25');page.locator('#applyManual').click()
-        expect(page.locator('#rows tr').filter(has_text='RBC Avion')).to_contain_text('0,0000781235')
+        expect(page.locator('#rows tr').filter(has_text='RBC Avion')).to_contain_text('12800.25 unités locales pour 1 CAD')
         # Wise : même convention inverse avec frais CAD saisis, sans devis total.
         page.locator('#wiseTotal').fill('');page.locator('#m-wise').fill('2');page.locator('#wiseFee').fill('1');page.locator('#applyManual').click()
         wise=page.locator('#rows tr').filter(has_text='Wise Debit')
         expect(wise.locator('td').nth(2)).to_contain_text('50,00');expect(wise.locator('td').nth(4)).to_contain_text('51,00');expect(wise.locator('td').nth(3)).to_contain_text('1,00')
-        page.locator('#m-rbc').fill('0');page.locator('#applyManual').click();expect(page.locator('#status')).to_contain_text('valeur positive')
+        page.locator('#m-rbc').fill('0');page.locator('#applyManual').click();expect(page.locator('#status')).to_contain_text('positif')
         page.locator('#amount').fill('101');expect(page.locator('#wiseTotal')).to_have_value('');expect(page.locator('#results')).to_be_hidden()
         context.set_offline(True);page.locator('#compareForm button').click();expect(page.locator('#status')).to_contain_text('Consultation :');context.set_offline(False)
         page.set_viewport_size({'width':390,'height':844});page.goto(origin);expect(page.locator('#settingsButton')).to_be_visible()
