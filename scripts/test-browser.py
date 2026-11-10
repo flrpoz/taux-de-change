@@ -94,8 +94,32 @@ try:
         expect(page.locator('thead th').nth(1)).to_have_text('Carte')
         page.locator('#manual > summary').click()
         expect(page.locator('label[for=m-rbc]')).to_contain_text('unités locales pour 1 CAD')
+        # Seulement deux taux saisis : dates/provenance/frais inclus déjà renseignés.
+        local_day=page.evaluate("(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')})()")
+        for ident in ['rbc','bnc','wise']:
+            expect(page.locator('#d-'+ident)).to_have_value(local_day)
+            expect(page.locator('#origin-'+ident)).to_have_value('calculator')
+        for ident in ['rbc','bnc']:
+            expect(page.locator('#mode-'+ident)).to_have_value('inclusive')
+            expect(page.locator('#included-'+ident)).to_be_enabled()
+        expect(page.locator('#included-rbc')).to_have_value('3,1')
+        page.locator('#m-rbc').fill('0,5');page.locator('#m-bnc').fill('0,625');page.locator('#applyManual').click()
+        expect(page.locator('#rows tr').filter(has_text='RBC Avion').locator('td').nth(4)).to_contain_text('200,00')
+        expect(page.locator('#rows tr').filter(has_text='BNC World Elite').locator('td').nth(4)).to_contain_text('160,00')
+        # Modifier les frais applicables ne doit pas réinterpréter les frais du taux déjà recopié.
+        page.locator('#settingsButton').click();page.locator('#s-rbcFX').fill('4');page.locator('#settingsForm button[type=submit]').click()
+        expect(page.locator('#included-rbc')).to_have_value('3,1')
+        page.locator('#applyManual').click();expect(page.locator('#rows tr').filter(has_text='RBC Avion').locator('td').nth(4)).to_contain_text('201,75')
+        page.locator('#settingsButton').click();page.locator('#s-rbcFX').fill('3.1');page.locator('#settingsForm button[type=submit]').click()
+        # Une date historique explicitement saisie reste respectée.
+        page.locator('#d-rbc').fill('2026-01-01');page.locator('#applyManual').click()
+        expect(page.locator('#rows tr').filter(has_text='RBC Avion')).to_contain_text('2026-01-01')
+        page.locator('#amount').fill('101')
+        for ident in ['rbc','bnc','wise']:expect(page.locator('#d-'+ident)).to_have_value(local_day)
+        page.locator('#amount').fill('100')
         for currency in ['EUR','USD','IDR','AUD','JPY']:
             page.locator('#currency').select_option(currency)
+            for ident in ['rbc','bnc','wise']:expect(page.locator('#d-'+ident)).to_have_value(local_day)
             for ident,rate in [('rbc',str(1/1.5)),('bnc',str(1/1.51))]:
                 page.locator('#m-'+ident).fill(rate);page.locator('#d-'+ident).fill(day);page.locator('#mode-'+ident).select_option('exclusive')
             page.locator('#d-wise').fill(day);page.locator('#wiseTotal').fill('158.07');page.locator('#wiseFee').fill('0.70')
