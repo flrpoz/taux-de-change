@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile,stat} from 'node:fs/promises';
-const required=['index.html','app.js','engine.mjs','provenance.mjs','snapshot.mjs','style.css','sw.js','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png','rates.json'];
+const required=['index.html','app.js','engine.mjs','provenance.mjs','snapshot.mjs','style.css','sw.js','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png','rates.json','history.html','history-core.mjs','history-db.mjs','history-save.mjs','history-page.mjs'];
 for(const file of required)assert.ok((await stat('dist/'+file)).size>0,`${file} absent ou vide`);
 const html=await readFile('dist/index.html','utf8');
 assert.match(html,/rel="apple-touch-icon" href="icon-180.png"/);
