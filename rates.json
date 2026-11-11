@@ -17,13 +17,13 @@
       "termsUrl": "https://wise.com/ca/legal/terms-of-use"
     }
   },
-  "checkedAt": "2026-11-10T15:16:42.851Z",
+  "checkedAt": "2026-11-11T15:19:48.509Z",
   "currencies": {
     "EUR": {
       "reference": {
-        "rate": 1.5852,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 1.5839,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=EUR&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -38,9 +38,9 @@
     },
     "USD": {
       "reference": {
-        "rate": 1.4136,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 1.4235,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=USD&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -55,9 +55,9 @@
     },
     "AUD": {
       "reference": {
-        "rate": 0.97587,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 0.97639,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=AUD&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -72,9 +72,9 @@
     },
     "IDR": {
       "reference": {
-        "rate": 0.000078262,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 0.000078322,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=IDR&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -89,9 +89,9 @@
     },
     "JPY": {
       "reference": {
-        "rate": 0.0089367,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 0.0089395,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=JPY&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -106,9 +106,9 @@
     },
     "GBP": {
       "reference": {
-        "rate": 1.8974,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 1.8942,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=GBP&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -123,9 +123,9 @@
     },
     "CHF": {
       "reference": {
-        "rate": 1.7225,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 1.7153,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=CHF&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -140,9 +140,9 @@
     },
     "NZD": {
       "reference": {
-        "rate": 0.79558,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 0.79481,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=NZD&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -157,9 +157,9 @@
     },
     "THB": {
       "reference": {
-        "rate": 0.042247,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 0.042252,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=THB&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -174,9 +174,9 @@
     },
     "MXN": {
       "reference": {
-        "rate": 0.07619,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 0.076288,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=MXN&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -191,9 +191,9 @@
     },
     "SGD": {
       "reference": {
-        "rate": 1.1058,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 1.1099,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=SGD&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
@@ -208,9 +208,9 @@
     },
     "HKD": {
       "reference": {
-        "rate": 0.18019,
-        "stamp": "2026-11-10 · heure de fixation non fournie",
-        "rateDate": "2026-11-10",
+        "rate": 0.18144,
+        "stamp": "2026-11-11 · heure de fixation non fournie",
+        "rateDate": "2026-11-11",
         "source": "https://api.frankfurter.dev/v1/latest?base=HKD&symbols=CAD",
         "status": "estimated",
         "feeMode": "exclusive"
